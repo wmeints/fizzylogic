@@ -11,7 +11,8 @@
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-sass": "^4.1.0",
-    "node-sass": "^5.0.0"
+    "node-sass": "^5.0.0",
+    "yargs-parser": ">=5.0.0-security.0"
   },
   "dependencies": {
     "bootstrap": "^5.0.0-beta1",
