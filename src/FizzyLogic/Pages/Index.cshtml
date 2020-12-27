@@ -1,0 +1,22 @@
+@page "/"
+@model IndexPageModel
+@{
+    ViewBag.Title = "Home";
+}
+@section Head {
+    <link rel="next" href="/page/2">
+}
+@section Scripts {
+    <script>
+    var rootElement = document.querySelector(".article-feed");
+    var scroller = new InfiniteScroll(rootElement, {
+        path: "link[rel='next']",
+        append: ".article-card-container",
+        history: false    
+    });
+    </script>
+}
+<div class="container">
+    <h1>Latest articles</h1>
+    <partial model="@Model.Articles" name="Shared/_ArticleFeed"/>
+</div>

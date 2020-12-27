@@ -1,0 +1,18 @@
+﻿@page "/page/{pageIndex}"
+@model FizzyLogic.Pages.ArchivePageModel
+@section Head {
+    <link rel="next" href="/page/@(Model.PageIndex+1)">
+}
+@section Scripts {
+    <script>
+    var rootElement = document.querySelector(".article-feed");
+    var scroller = new InfiniteScroll(rootElement, {
+        path: "link[rel='next']",
+        append: ".article-card-container",
+        history: false    
+    });
+    </script>
+}
+<div class="container">
+    <partial model="@Model.Articles" name="Shared/_ArticleFeed"/>
+</div>

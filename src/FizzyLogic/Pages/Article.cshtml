@@ -1,0 +1,42 @@
+﻿@page "/{year}/{month}/{day}/{slug}"
+@model FizzyLogic.Pages.ArticlePageModel
+@{
+    ViewBag.Title = @Model.Article.Title;
+}
+<div class="container">
+    @if(!string.IsNullOrEmpty(Model.Article.FeaturedImage))
+    {
+        <div class="row mb-4 justify-content-center">
+            <div class="col-9">
+                <div class="header-image rounded-3" style="background-image: url('@Model.Article.FeaturedImage');"></div>
+            </div>
+        </div>
+    }
+    <div class="row justify-content-center">
+        <div class="col-7">
+            <article>
+                <header>
+                    <div class="row">
+                        <div class="col">
+
+                            <h1>@Model.Article.Title</h1>
+                            <p class="small text-muted">
+                                Published @Model.Article.DatePublished<br/>
+                                Filed under <a asp-page="/Category" asp-route-slug="@Model.Article.Category.Slug">@Model.Article.Category.Title</a>
+                            </p>
+
+                        </div>
+                    </div>
+                </header>
+                <div class="row">
+                    <div class="col">
+                        <main>
+                            @Html.Raw(Model.Article.Html)
+                        </main>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+</div>
