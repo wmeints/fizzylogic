@@ -19,6 +19,20 @@
   <ItemGroup>
     <Folder Include="backup" />
   </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2017-12-30.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-01-13.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-05-21.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-09-06.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2019-03-10.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2019-10-23-06-44-54.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-05-14-09-45-27.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-06-12-04-58-44.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-12-18-09-17-48.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes-1.0-backup.yaml" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes.yaml" />
+  </ItemGroup>
   <Target Name="CompileClientAssets" BeforeTargets="Publish">
     <Exec Command="npm install" Condition="!Exists('node_modules')" />
     <Exec Command="npm run build" />
