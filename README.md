@@ -1,5 +1,7 @@
 # Willem's Fizzy Logic
 
+![CodeQL](https://github.com/wmeints/fizzylogic/workflows/CodeQL/badge.svg)
+
 This repository contains the sources for my personal website. It's still in the 
 making after a very long time. I've restarted it a couple of times because I
 wasn't happy with the results. But this time it's here to stay.
