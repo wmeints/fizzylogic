@@ -2,6 +2,7 @@ using System;
 using FizzyLogic.Data;
 using FizzyLogic.Models;
 using FizzyLogic.Services;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,13 @@ namespace FizzyLogic
             services.AddAuthorization();
 
             services.AddControllers();
-            services.AddRazorPages();
+            
+            services
+                .AddRazorPages()
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssembly(typeof(Startup).Assembly);
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, IConfiguration configuration)
