@@ -24,6 +24,15 @@ namespace FizzyLogic
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // This data context is used for the razor components.
+            // We need to create an instance per operation.
+            services.AddDbContextFactory<ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(_configuration.GetConnectionString("DefaultDatabase"));
+            });
+            
+            // This data context is used for the razor pages. 
+            // ASP.NET Core will make sure we have an instance per request.
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(_configuration.GetConnectionString("DefaultDatabase"));
@@ -36,7 +45,7 @@ namespace FizzyLogic
             services.AddAuthentication();
             services.AddAuthorization();
 
-            services.AddControllers();
+            services.AddServerSideBlazor();
             
             services
                 .AddRazorPages()
@@ -64,8 +73,8 @@ namespace FizzyLogic
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapBlazorHub();
                 endpoints.MapRazorPages();
-                endpoints.MapControllers();
             });
         }
     }

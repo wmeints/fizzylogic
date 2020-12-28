@@ -12,4 +12,12 @@
             <h1>Dashboard</h1>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <component type="typeof(FizzyLogic.Components.Admin.ArticleTable)" render-mode="ServerPrerendered"/>
+        </div>
+    </div>
 </div>
+@section Scripts {
+    <script src="/_framework/blazor.server.js"></script>
+}
