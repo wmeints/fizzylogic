@@ -1,0 +1,15 @@
+﻿@page
+@attribute [Authorize]
+@using FizzyLogic.AdminPanel
+@model FizzyLogic.Pages.Admin.IndexPageModel
+
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Admin Panel";
+}
+@section Scripts {
+    <script src="/_framework/blazor.server.js"></script>
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+

@@ -45,7 +45,10 @@ namespace FizzyLogic
             services.AddAuthentication();
             services.AddAuthorization();
 
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor(options =>
+            {
+                options.DetailedErrors = true;
+            });
             
             services
                 .AddRazorPages()
@@ -75,7 +78,9 @@ namespace FizzyLogic
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapRazorPages();
+                endpoints.MapFallbackToPage("/Admin/{**segment}", "/Admin/_Host");
             });
+
         }
     }
 }

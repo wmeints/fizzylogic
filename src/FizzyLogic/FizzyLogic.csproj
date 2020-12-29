@@ -32,6 +32,7 @@
     <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-12-18-09-17-48.json" />
     <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes-1.0-backup.yaml" />
     <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes.yaml" />
+    <_ContentIncludedByDefault Remove="Components\Admin\ArticleTable.razor" />
   </ItemGroup>
   <Target Name="CompileClientAssets" BeforeTargets="Publish">
     <Exec Command="npm install" Condition="!Exists('node_modules')" />
