@@ -1,0 +1,21 @@
+﻿@page
+@attribute [Authorize]
+@using FizzyLogic.AdminPanel
+@model FizzyLogic.Pages.Admin.IndexPageModel
+
+@{
+    Layout = "/Pages/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Admin Panel";
+}
+@section Head{
+    <link rel="stylesheet" href="/css/codemirror.min.css">
+    <link rel="stylesheet" href="/css/toastui-editor.min.css">
+}
+@section Scripts {
+    <script src="/_framework/blazor.server.js"></script>
+    <script src="/js/content-editor.js" asp-append-version="true"></script>
+    <script src="/js/toastui-editor-all.min.js" asp-append-version="true"></script>
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+

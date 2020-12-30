@@ -1,0 +1,23 @@
+{
+  "name": "fizzylogic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0",
+    "node-sass": "^5.0.0",
+    "yargs-parser": ">=13.1.2"
+  },
+  "dependencies": {
+    "@toast-ui/editor": "^2.5.1",
+    "bootstrap": "^5.0.0-beta1",
+    "infinite-scroll": "^4.0.0-beta.0",
+    "jquery": "^3.5.1"
+  }
+}

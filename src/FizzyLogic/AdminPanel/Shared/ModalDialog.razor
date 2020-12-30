@@ -1,0 +1,33 @@
+﻿@code 
+{
+    [Parameter]
+    public bool Visible { get; set; }
+    
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public RenderFragment Body { get; set; }
+    
+    [Parameter]
+    public RenderFragment Footer { get; set; }    
+}
+@if (Visible)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                </div>
+                <div class="modal-body">
+                    @Body
+                </div>
+                <div class="modal-footer">
+                    @Footer
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>    
+}

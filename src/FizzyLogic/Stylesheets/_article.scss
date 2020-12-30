@@ -1,0 +1,44 @@
+﻿.article-content {
+  .kg-image-card {
+    text-align: center;
+  }
+
+  figure > img {
+    @extend .img-fluid;
+    @extend .rounded-3;
+    @extend .shadow;
+  }
+
+  figure > figcaption {
+    @extend .text-muted;
+    @extend .small;
+    @extend .mt-1;
+
+    text-align: center;
+  }
+
+  figure > pre {
+    @extend .rounded-3;
+    @extend .p-3;
+    @extend .shadow;
+
+    background-color: #333;
+    color: #fafafa;
+  }
+
+  pre {
+    @extend .rounded-3;
+    @extend .p-3;
+    @extend .shadow;
+
+    background-color: #333;
+    color: #fafafa;
+  }
+
+  .kg-embed-card {
+    @extend .ratio;
+    @extend .ratio-16x9;
+    @extend .shadow;
+    @extend .rounded-3;
+  }
+}

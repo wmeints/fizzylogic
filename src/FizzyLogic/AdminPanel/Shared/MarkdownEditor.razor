@@ -1,0 +1,24 @@
+﻿@inject IJSRuntime JavaScript
+@code {
+    [Parameter]
+    public string Content { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JavaScript.InvokeVoidAsync("contentEditor.activate", Content);
+    }
+
+    public async Task<string> GetEditorContentAsync()
+    {
+        return await JavaScript.InvokeAsync<string>("contentEditor.getContent");
+    }
+}
+<div id="editor">
+    
+</div>
+

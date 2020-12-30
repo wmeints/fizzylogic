@@ -1,0 +1,188 @@
+﻿@page "/Admin"
+@page "/Admin/Page/{PageIndex:int}"
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+@code {
+    private IEnumerable<Article> Articles { get; set; }
+
+    private bool ShowDeleteArticleDialog { get; set; }
+    
+    private bool IsLoading { get; set; } = true;
+
+    private int TotalPages { get; set; }
+    
+    private Article SelectedArticle { get; set; }
+    
+    [Parameter]
+    public int PageIndex { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (PageIndex == 0) PageIndex = 1;
+        await LoadArticles(PageIndex);
+    }
+
+    private async Task LoadArticles(int pageIndex)
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+
+        TotalPages = (int) Math.Ceiling((await applicationDbContext.Articles.CountAsync()) / 15.0);
+
+        Articles = await applicationDbContext.Articles
+            .Include(x => x.Category)
+            .OrderByDescending(x => x.DateCreated)
+            .Skip((pageIndex -1) * 10)
+            .Take(10)
+            .ToListAsync();
+
+        IsLoading = false;
+    }
+
+    private string ArticleEditorUrl(int id)
+    {
+        return $"/Admin/Articles/Edit/{id}";
+    }
+
+    private async Task SelectPage(int pageIndex)
+    {
+        PageIndex = pageIndex;
+        await LoadArticles(PageIndex);
+    }
+
+    private void BeginDeleteArticle(Article article)
+    {
+        SelectedArticle = article;
+        ShowDeleteArticleDialog = true;
+        
+        StateHasChanged();
+    }
+
+    private void CancelDeleteArticle()
+    {
+        SelectedArticle = null;
+        ShowDeleteArticleDialog = false;
+    }
+
+    private async Task CompleteDeleteArticle()
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+        
+        applicationDbContext.Articles.Attach(SelectedArticle);
+        applicationDbContext.Articles.Remove(SelectedArticle);
+
+        await applicationDbContext.SaveChangesAsync();
+
+        await LoadArticles(PageIndex);
+        
+        SelectedArticle = null;
+        ShowDeleteArticleDialog = false;
+    }
+}
+
+<div class="row mb-4">
+    <div class="col me-auto">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/Admin/">Content</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/Admin/Categories">Categories</NavLink>
+            </li>
+        </ul>
+    </div>
+    <div class="col-auto">
+        <NavLink href="/Admin/Articles/New" class="btn btn-outline-primary">Create article</NavLink>
+    </div>
+</div>
+@if (IsLoading)
+{
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="spinner-grow" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <table class="table hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var article in Articles)
+                {
+                    var currentArticle = article;
+                    
+                    <tr>
+                        <td>@currentArticle.Title</td>
+                        <td>@currentArticle.Category.Title</td>
+                        <td>
+                            @if (currentArticle.DatePublished == null)
+                            {
+                                <span class="badge bg-warning">draft</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info">published</span>
+                            }
+                        </td>
+                        <td>
+                            <NavLink href="@ArticleEditorUrl(currentArticle.Id)" class="btn btn-sm btn-outline-secondary"><i class="fal fa-edit"></i> edit</NavLink>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => BeginDeleteArticle(currentArticle)"><i class="fal fa-trash"></i> delete</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@if (Articles != null)
+{
+    <div class="row">
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    @for (int index = 1; index <= TotalPages; index++)
+                    {
+                        var pageIndex = index;
+                        <li class="page-item @(PageIndex == pageIndex ? "active" : "")">
+                            <NavLink class="page-link" href="@($"/Admin/Page/{pageIndex}")" @onclick="() => SelectPage(pageIndex)">@pageIndex</NavLink>
+                        </li>
+                    }
+                </ul>
+            </nav>           
+        </div>
+    </div>
+}
+
+@if (ShowDeleteArticleDialog)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove "@SelectedArticle.Title"?.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => CancelDeleteArticle()">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick="() => CompleteDeleteArticle()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}

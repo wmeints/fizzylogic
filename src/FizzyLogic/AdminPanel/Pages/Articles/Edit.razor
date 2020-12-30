@@ -1,0 +1,246 @@
+﻿@page "/Admin/Articles/Edit/{id:int}"
+@using Microsoft.EntityFrameworkCore.Internal
+@using Markdig
+@using Microsoft.AspNetCore.Identity
+@using System.IO
+@inject Slugifier Slugifier
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@inject IImageService ImageService;
+
+@code {
+    private MarkdownEditor _editorInstance;
+    
+    private string SelectedCategoryId { get; set; } = "-1";
+    
+    private string Title { get; set; } = "";
+    
+    private string Body { get; set; } = "";
+    
+    private string Excerpt { get; set; } = "";
+    
+    private IBrowserFile FeaturedImageFile { get; set; }
+    
+    private IEnumerable<Category> AvailableCategories { get; set; }
+    
+    private bool IsLoading { get; set; } = true;
+    
+    private bool IsTitleValid { get; set; } = true;
+    
+    private bool IsCategoryValid { get; set; } = true;
+    
+    private bool IsBodyValid { get; set; } = true;
+    
+    private bool IsSettingsVisible { get; set; }
+    
+    private bool CanPublish { get; set; } = true;
+    
+    private bool CanEdit { get; set; } = true;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool ShowValidationError => !(IsBodyValid && IsCategoryValid && IsTitleValid);
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+
+        var article = await applicationDbContext.Articles
+            .Include(x => x.Category)
+            .SingleOrDefaultAsync(x => x.Id == Id);
+
+        Title = article.Title;
+        Body = article.Markdown;
+        SelectedCategoryId = article.Category.Id.ToString();
+        Excerpt = article.Excerpt;
+
+        CanPublish = article.DatePublished == null;
+        CanEdit = !String.IsNullOrEmpty(article.Markdown);
+
+        AvailableCategories = await applicationDbContext.Categories
+            .OrderBy(x => x.Title)
+            .ToListAsync();
+
+        IsLoading = false;
+    }
+
+    private async Task<bool> IsContentValidAsync()
+    {
+        Body = await _editorInstance.GetEditorContentAsync();
+
+        IsBodyValid = !string.IsNullOrEmpty(Body);
+        IsTitleValid = !string.IsNullOrEmpty(Title);
+        IsCategoryValid = SelectedCategoryId != "-1";
+
+        return IsTitleValid && IsCategoryValid && IsBodyValid;
+    }
+
+    private async Task SaveChangesAsync(bool publish)
+    {
+        var valid = await IsContentValidAsync();
+
+        if (valid)
+        {
+            var applicationDbContext = DbContextFactory.CreateDbContext();
+
+            var categoryId = Int32.Parse(SelectedCategoryId);
+            var category = await applicationDbContext.Categories.SingleAsync(x => x.Id == categoryId);
+
+            var article = await applicationDbContext.Articles.SingleAsync(x => x.Id == Id);
+
+            if (FeaturedImageFile != null)
+            {
+                var featuredImageUrl = await UploadFeaturedImage(FeaturedImageFile);
+                article.FeaturedImage = featuredImageUrl;
+            }
+
+            if (string.IsNullOrEmpty(Excerpt))
+            {
+                var plainTextContent = Markdown.ToPlainText(Body);
+                Excerpt = plainTextContent.Substring(0, Math.Min(plainTextContent.Length, 250));
+            }
+
+            article.Title = Title;
+            article.Category = category;
+            article.Markdown = Body;
+            article.Html = Markdown.ToHtml(Body);
+            article.Excerpt = Excerpt;
+
+            // You can only publish once, and we don't want to break the URL.
+            // So instead of blindly overwriting the publication date, set it only once.
+            if (publish && article.DatePublished == null)
+            {
+                article.DatePublished = DateTime.UtcNow;
+                CanPublish = false;
+            }
+
+            await applicationDbContext.SaveChangesAsync();
+        }
+    }
+
+    private async Task OnSaveClick()
+    {
+        await SaveChangesAsync(false);
+    }
+
+    private async Task OnPublishClick()
+    {
+        await SaveChangesAsync(true);
+    }
+
+    private async Task<string> UploadFeaturedImage(IBrowserFile featuredImageFile)
+    {
+        return await ImageService.UploadImage(
+            featuredImageFile.Name, 
+            featuredImageFile.OpenReadStream());
+    }
+
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        FeaturedImageFile = e.File;
+    }
+
+    private void OnToggleSettings()
+    {
+        IsSettingsVisible = !IsSettingsVisible;
+    }
+
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <NavLink href="/Admin/">Admin panel</NavLink>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Edit &quot;@Title&quot;</li>
+    </ol>
+</nav>
+@if (!CanEdit)
+{
+    <div class="row justify-content-center">
+        <div class="col">
+            <h1>@Title</h1>
+            <p>You can't edit this post as it was migrated and doesn't have markdown content attached to it.</p>
+        </div>
+    </div>
+}
+else if (IsLoading)
+{
+    <div class="row justify-content-center">
+        <div class="spinner-grow"></div>
+    </div>
+}
+else
+{
+    @if (ShowValidationError)
+    {
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-danger">
+                    Unable to save or publish. Please make sure the content is correctly specified.
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row mb-4 justify-content-end">
+        <div class="col-auto">
+            <div class="float-start dropdown ms-1">
+                <button class="btn btn-outline-secondary mr-1" data-toggle="dropdown" @onclick="OnToggleSettings">
+                    <i class="fal fa-cog"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right shadow @(IsSettingsVisible ? "show" : "")" style="width: 450px; margin-left: -408px">
+                    <div class="py-2 px-2">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label for="category">Category</label>
+                                <select class="form-select @(IsCategoryValid ? "" : "is-invalid")" @bind="SelectedCategoryId" id="category">
+                                    <option value="-1">Select a category</option>
+                                    @foreach (var category in AvailableCategories)
+                                    {
+                                        <option value="@category.Id">@category.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label for="excerpt">Excerpt:</label>
+                                <textarea id="excerpt" @bind="Excerpt" rows="4" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="featuredImage">Featured image:</label>
+                                <InputFile type="file" id="featuredImage" class="form-control" OnChange="OnFileSelected"></InputFile>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
+
+            @if (CanPublish)
+            {
+                <button class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
+            }
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col">
+            <label for="title">Title</label>
+            <input type="text" id="title" class="form-control @(IsTitleValid ? "" : "is-invalid")" placeholder="My awesome article" @bind="Title"/>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <MarkdownEditor Content="@Body" @ref="_editorInstance"></MarkdownEditor>
+        </div>
+    </div>
+}

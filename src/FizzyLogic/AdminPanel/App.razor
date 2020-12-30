@@ -1,0 +1,17 @@
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(MainLayout)"></AuthorizeRouteView>
+        </Found>
+        <NotFound>
+            <NavigationBar></NavigationBar>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h1>Woops, that page doesn't exist.</h1>
+                    </div>
+                </div>
+            </div>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

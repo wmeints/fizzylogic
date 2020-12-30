@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>613a9061-f48e-48ea-a427-56056edfdbc6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.3.0" />
+    <PackageReference Include="Markdig" Version="0.22.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.1" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="backup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2017-12-30.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-01-13.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-05-21.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2018-09-06.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2019-03-10.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2019-10-23-06-44-54.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-05-14-09-45-27.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-06-12-04-58-44.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\data\willems-fizzy-logic.ghost.2020-12-18-09-17-48.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes-1.0-backup.yaml" />
+    <_ContentIncludedByDefault Remove="wwwroot\content\settings\routes.yaml" />
+    <_ContentIncludedByDefault Remove="Components\Admin\ArticleTable.razor" />
+  </ItemGroup>
+  <Target Name="CompileClientAssets" BeforeTargets="Publish">
+    <Exec Command="npm install" Condition="!Exists('node_modules')" />
+    <Exec Command="npm run build" />
+  </Target>
+</Project>

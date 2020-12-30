@@ -1,0 +1,26 @@
+﻿@page "/tag/{slug}/page/{pageIndex}"
+@model FizzyLogic.Pages.CategoryArchivePageModel
+@{
+    ViewBag.Title = $"Recent articles filed under {Model.Category.Title} - Page {Model.PageIndex}";
+}
+@section Head {
+    <link rel="next" href="/tag/@Model.Category.Slug/page/2">
+}
+@section Scripts {
+    <script>
+    var rootElement = document.querySelector(".article-feed");
+    var scroller = new InfiniteScroll(rootElement, {
+        path: "link[rel='next']",
+        append: ".article-card-container",
+        history: false    
+    });
+    </script>
+}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Recent articles filed under @Model.Category.Title</h1>
+        </div>
+    </div>
+    <partial model="@Model.Articles" name="Shared/_ArticleFeed"/>
+</div>

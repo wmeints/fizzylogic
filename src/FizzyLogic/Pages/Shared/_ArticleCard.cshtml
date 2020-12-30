@@ -1,0 +1,69 @@
+﻿@model Article
+<div class="col article-card-container">
+    <div class="card article-card h-100 border-light shadow-sm">
+        @if(!string.IsNullOrEmpty(Model.FeaturedImage))
+        {
+            <div src="@Model.FeaturedImage" alt="" class="card-img-top" style="height: 250px; background-image: url('@(Model.FeaturedImage)'); background-size: cover; background-position: center">
+
+            </div>
+            <article class="card-body">
+                <header>
+                    <a asp-page="/Article" 
+                       asp-route-year="@Model.DatePublished.Value.Year"
+                       asp-route-month="@Model.DatePublished.Value.Month"
+                       asp-route-day="@Model.DatePublished.Value.Day"
+                       asp-route-slug="@Model.Slug"
+                       class="card-link"
+                    >
+                        <h2 class="h5 card-title">@Model.Title</h2>
+                    </a>
+                </header>
+                <main>
+                    <div class="small text-muted mb-2">
+                        Created @Model.DatePublished<br/>
+                        Filed in <a asp-page="/Category" asp-route-slug="@Model.Category.Slug">@Model.Category.Title</a>
+                    </div>
+                    <p class="card-text">@Model.Excerpt</p>
+                    <a asp-page="/Article" 
+                       asp-route-year="@Model.DatePublished.Value.Year"
+                       asp-route-month="@Model.DatePublished.Value.Month"
+                       asp-route-day="@Model.DatePublished.Value.Day"
+                       asp-route-slug="@Model.Slug"
+                       class="card-link">Read more</a>
+                </main>
+            </article>
+        }
+        else
+        {
+            <article class="card-body">
+                <header>
+                    <a asp-page="/Article" 
+                       asp-route-year="@Model.DatePublished.Value.Year"
+                       asp-route-month="@Model.DatePublished.Value.Month"
+                       asp-route-day="@Model.DatePublished.Value.Day"
+                       asp-route-slug="@Model.Slug"
+                       class="card-link"
+                    >
+                        <h2 class="h2 card-title">@Model.Title</h2>
+                    </a>
+                </header>
+                <main>
+                    <p class="small text-muted mb-2">
+                        Created @Model.DatePublished<br/>
+                        Filed in <a asp-page="/Category" asp-route-slug="@Model.Category.Slug">@Model.Category.Title</a>
+                    </p>
+                    <p class="card-text">@Model.Excerpt</p>
+                    <a asp-page="/Article" 
+                       asp-route-year="@Model.DatePublished.Value.Year"
+                       asp-route-month="@Model.DatePublished.Value.Month"
+                       asp-route-day="@Model.DatePublished.Value.Day"
+                       asp-route-slug="@Model.Slug"
+                       class="card-link">Read more</a>
+                </main>
+                <footer>
+                    
+                </footer>
+            </article>
+        }
+    </div>
+</div>  

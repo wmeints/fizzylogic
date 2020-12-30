@@ -1,0 +1,87 @@
+﻿@page "/Admin/Categories/Edit/{id:int}"
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@inject NavigationManager NavigationManager
+
+@code {
+    private string Title { get; set; }
+
+    private bool IsTitleValid { get; set; } = true;
+
+    private bool ShowValidationError => !IsTitleValid;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+        var category = await applicationDbContext.Categories.SingleOrDefaultAsync(x => x.Id == Id);
+
+        Title = category.Title;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (string.IsNullOrEmpty(Title))
+        {
+            IsTitleValid = false;
+        }
+
+        if (IsTitleValid)
+        {
+            var applicationDbContext = DbContextFactory.CreateDbContext();
+            var category = await applicationDbContext.Categories.SingleOrDefaultAsync(x => x.Id == Id);
+
+            category.Title = Title;
+
+            await applicationDbContext.SaveChangesAsync();
+
+            NavigationManager.NavigateTo("/Admin/Categories");
+        }
+    }
+
+    private void CancelChanges()
+    {
+        NavigationManager.NavigateTo("/Admin/Categories");
+    }
+
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <NavLink href="/Admin/">Admin panel</NavLink>
+        </li>
+        <li class="breadcrumb-item">
+            <NavLink href="/Admin/Categories">Categories</NavLink>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Edit category</li>
+    </ol>
+</nav>
+<div class="row mb-2">
+    <div class="col">
+        <h1>Edit category details</h1>
+    </div>
+</div>
+@if (ShowValidationError)
+{
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-danger">
+                Unable to save. Please make sure the content is correctly specified.
+            </div>
+        </div>
+    </div>
+}
+<div class="row mb-3">
+    <div class="col">
+        <label for="title">Title:</label>
+        <input id="title" type="text" class="form-control @(IsTitleValid ? "" : "is-invalid")" @bind="Title">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col">
+        <button type="button" class="btn btn-primary" @onclick="SaveChanges">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="CancelChanges">Cancel</button>
+    </div>
+</div>

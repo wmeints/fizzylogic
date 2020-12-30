@@ -1,0 +1,39 @@
+﻿@page
+@model FizzyLogic.Pages.Account.LoginPageModel
+
+@{
+    Layout = "Shared/_AccountLayout";
+    ViewBag.Title = "Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <h1>Login</h1>
+            <div class="alert alert-danger" asp-validation-summary="All">
+                <h4 class="alert-heading">
+                    Woops, that's not going to work!
+                </h4>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Input.EmailAddress">E-mail address</label>
+                    <input asp-for="Input.EmailAddress" type="text" class="form-control" autocomplete="false" validation-state-for="Input.EmailAddress">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Input.Password">Password</label>
+                    <input asp-for="Input.Password" type="password" class="form-control" validation-state-for="Input.Password">
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <input type="hidden" asp-for="ReturnUrl">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

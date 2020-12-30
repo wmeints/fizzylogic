@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true">
+    <title>@ViewBag.Title - Willem's Fizzy Logic</title>
+    <link rel="canonical" href="https://fizzylogic.nl/" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <base href="/"/>
+    @await RenderSectionAsync("Head", required: false)
+  </head>
+  <body>
+    @RenderBody()
+  
+    <script src="/js/jquery.min.js" asp-append-version="true"></script>
+    <script src="/js/bootstrap.bundle.js" asp-append-version="true"></script>
+    <script src="/js/infinite-scroll.pkgd.min.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+  </body>
+</html>

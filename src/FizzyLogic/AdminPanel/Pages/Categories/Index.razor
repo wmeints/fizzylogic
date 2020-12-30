@@ -1,0 +1,141 @@
+﻿@page "/Admin/Categories"
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@code {
+    private bool IsLoading { get; set; } = true;
+    
+    private Category SelectedCategory { get; set; }
+    
+    private IEnumerable<Category> Categories { get; set; }
+
+    private bool ShowDeleteCategoryDialog { get; set; }
+
+    private bool ShowDeleteError { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private string CategoryEditorUrl(int id)
+    {
+        return $"/Admin/Categories/Edit/{id}";
+    }
+
+    private async Task BeginRemoveCategory(Category category)
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+        var hasContent = await applicationDbContext.Articles.AnyAsync(x => x.Category.Id == category.Id);
+
+        if (hasContent)
+        {
+            ShowDeleteError = true;
+        }
+        else
+        {
+            SelectedCategory = category;
+            ShowDeleteCategoryDialog = true;    
+        }
+    }
+
+    private async Task CompleteDeleteCategory()
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+        applicationDbContext.Attach(SelectedCategory);
+        applicationDbContext.Remove(SelectedCategory);
+
+        await applicationDbContext.SaveChangesAsync();
+
+        ShowDeleteCategoryDialog = false;
+        SelectedCategory = null;
+
+        await LoadCategories();
+    }
+
+    private void CancelDeleteCategory()
+    {
+        SelectedCategory = null;
+        ShowDeleteCategoryDialog = false;
+    }
+
+    private async Task LoadCategories()
+    {
+        var applicationDbContext = DbContextFactory.CreateDbContext();
+
+        Categories = await applicationDbContext.Categories
+            .OrderBy(x => x.Title)
+            .ToListAsync();
+
+        IsLoading = false;
+    }
+
+}
+<div class="row mb-4">
+    <div class="col me-auto">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/Admin/">Content</NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" Match="NavLinkMatch.All" href="/Admin/Categories">Categories</NavLink>
+            </li>
+        </ul>
+    </div>
+    <div class="col-auto">
+        <NavLink href="/Admin/Categories/New" class="btn btn-outline-primary">Create category</NavLink>
+    </div>
+</div>
+@if (IsLoading)
+{
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="spinner-grow" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var category in Categories)
+                {
+                    var currentCategory = category;
+                    <tr>
+                        <td>@currentCategory.Title</td>
+                        <td class="col-2">
+                            <NavLink class="btn btn-sm btn-outline-secondary" href="@CategoryEditorUrl(currentCategory.Id)"><i class="fal fa-edit"></i> edit</NavLink>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => BeginRemoveCategory(currentCategory)"><i class="fal fa-trash"></i> delete</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>    
+}
+<ModalDialog Title="Remove category?" Visible="@ShowDeleteCategoryDialog">
+    <Body>
+    <p>Are you sure you want to remove category &quot;@SelectedCategory.Title&quot;</p>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-secondary" @onclick="CancelDeleteCategory">Cancel</button>
+        <button type="button" class="btn btn-danger" @onclick="CompleteDeleteCategory">Delete</button>
+    </Footer>
+</ModalDialog>
+<ModalDialog Title="Can't remove category" Visible="@ShowDeleteError">
+    <Body>
+    <p>You can't remove this category as there's content attached to it.</p>
+    </Body>
+    <Footer>
+        <button class="btn btn-primary" @onclick="() => { ShowDeleteError = false; }">Close</button>
+    </Footer>
+</ModalDialog>
