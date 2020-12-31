@@ -9,14 +9,7 @@
 
         public string Process(string title)
         {
-            var slug = DashesPattern.Replace(NonAlphaNumericPattern.Replace(title.ToLowerInvariant(), "-"), "-");
-
-            if (slug.EndsWith("-"))
-            {
-                slug = slug[0..^1];
-            }
-
-            return slug;
+            return DashesPattern.Replace(NonAlphaNumericPattern.Replace(title.ToLowerInvariant(), "-"), "-").TrimEnd('-');
         }
     }
 }
