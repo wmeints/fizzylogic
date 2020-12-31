@@ -9,17 +9,30 @@ namespace FizzyLogic.Pages
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Page model for the homepage.
+    /// </summary>
     public class IndexPageModel : PageModel
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="IndexPageModel"/>.
+        /// </summary>
+        /// <param name="applicationDbContext">DbContext to load data.</param>
         public IndexPageModel(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
+        /// <summary>
+        /// Gets or sets the articles to render.
+        /// </summary>
         public IEnumerable<Article> Articles { get; set; }
 
+        /// <summary>
+        /// Handles the GET operation on the page.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
             Articles = await _applicationDbContext.Articles

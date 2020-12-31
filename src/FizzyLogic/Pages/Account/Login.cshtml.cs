@@ -7,29 +7,46 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
 
+    /// <summary>
+    /// Page model for the login page.
+    /// </summary>
     public class LoginPageModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public LoginPageModel(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        /// <summary>
+        /// Initializes a new instance of <see cref="LoginPageModel"/>.
+        /// </summary>
+        /// <param name="signInManager">The sign-in manager to use for logging in.</param>
+        public LoginPageModel(SignInManager<ApplicationUser> signInManager)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
         }
 
+        /// <summary>
+        /// Gets or sets the URL to return to after logging in.
+        /// </summary>
         [BindProperty]
         public string ReturnUrl { get; set; }
 
+        /// <summary>
+        /// Gets or sets the login information to use.
+        /// </summary>
         [BindProperty]
         public LoginForm Input { get; set; }
 
+        /// <summary>
+        /// Handles the GET operation on the page.
+        /// </summary>
         public IActionResult OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             return Page();
         }
 
+        /// <summary>
+        /// Handles the POST operation on the page.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
