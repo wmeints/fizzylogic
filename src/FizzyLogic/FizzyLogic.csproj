@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>613a9061-f48e-48ea-a427-56056edfdbc6</UserSecretsId>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableCodeAnalysis>true</EnableCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>

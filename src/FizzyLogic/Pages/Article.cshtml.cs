@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using FizzyLogic.Data;
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-
-namespace FizzyLogic.Pages
+﻿namespace FizzyLogic.Pages
 {
+    using System.Threading.Tasks;
+    using FizzyLogic.Data;
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.EntityFrameworkCore;
+
     public class ArticlePageModel : PageModel
     {
         private readonly ApplicationDbContext _applicationDbContext;
@@ -17,19 +17,14 @@ namespace FizzyLogic.Pages
         }
 
         public Article Article { get; set; }
-        
-        public async Task<IActionResult> OnGetAsync(int year, int month, int day, string slug)
+
+        public async Task<IActionResult> OnGetAsync(string slug)
         {
             Article = await _applicationDbContext.Articles
-                .Include(x=>x.Category)
+                .Include(x => x.Category)
                 .SingleOrDefaultAsync(x => x.Slug == slug && x.DatePublished != null);
 
-            if (Article == null)
-            {
-                return NotFound();
-            }
-
-            return Page();
+            return Article == null ? NotFound() : Page();
         }
     }
 }

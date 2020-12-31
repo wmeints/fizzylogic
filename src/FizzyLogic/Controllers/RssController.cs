@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.ServiceModel.Syndication;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using FizzyLogic.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace FizzyLogic.Controllers
+﻿namespace FizzyLogic.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.ServiceModel.Syndication;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Xml;
+    using FizzyLogic.Data;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     [ApiController]
     public class RssController : ControllerBase
     {
@@ -47,13 +47,13 @@ namespace FizzyLogic.Controllers
 
                 var feedItem = new SyndicationItem(contentItem.Title, feedItemContent, alternativeUrl,
                     contentItem.Id.ToString(), contentItem.DatePublished.Value);
-                
+
                 feedItems.Add(feedItem);
             }
 
             var feed = new SyndicationFeed(
-                "Willem's Fizzy Logic", 
-                "Random talk about machine learning and other development efforts", 
+                "Willem's Fizzy Logic",
+                "Random talk about machine learning and other development efforts",
                 new Uri("https://fizzylogic.nl/"),
                 feedItems);
 
@@ -61,10 +61,10 @@ namespace FizzyLogic.Controllers
             var outputWriter = new StringWriter(outputBuilder);
             var xmlWriter = new XmlTextWriter(outputWriter);
             var feedFormatter = new Rss20FeedFormatter(feed);
-            
+
             feedFormatter.WriteTo(xmlWriter);
 
-            return Content(outputBuilder.ToString(),"application/rss+xml; charset=utf-8");
+            return Content(outputBuilder.ToString(), "application/rss+xml; charset=utf-8");
         }
     }
 }

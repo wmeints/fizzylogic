@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace FizzyLogic.Pages
+﻿namespace FizzyLogic.Pages
 {
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
     public class About : PageModel
     {
-        public void OnGet()
-        {
-            
-        }
+
     }
 }

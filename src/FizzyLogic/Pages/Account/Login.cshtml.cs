@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using FizzyLogic.Forms;
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace FizzyLogic.Pages.Account
+﻿namespace FizzyLogic.Pages.Account
 {
+    using System.Threading.Tasks;
+    using FizzyLogic.Forms;
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
     public class LoginPageModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -20,7 +20,7 @@ namespace FizzyLogic.Pages.Account
 
         [BindProperty]
         public string ReturnUrl { get; set; }
-        
+
         [BindProperty]
         public LoginForm Input { get; set; }
 
@@ -29,7 +29,7 @@ namespace FizzyLogic.Pages.Account
             ReturnUrl = returnUrl;
             return Page();
         }
-        
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
