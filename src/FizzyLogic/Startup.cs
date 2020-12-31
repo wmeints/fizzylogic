@@ -14,15 +14,26 @@ namespace FizzyLogic
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
+    /// <summary>
+    /// Startup class for the website.
+    /// </summary>
     public class Startup
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="Startup"/>.
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Configures the dependencies for the application.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             // This data context is used for the razor components.
@@ -65,6 +76,13 @@ namespace FizzyLogic
                 .AddSingleton<IImageService, ImageService>();
         }
 
+        /// <summary>
+        /// Configures the middleware for the application.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="configuration"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             // The inital setup section helps me set up an initial user in the database.
