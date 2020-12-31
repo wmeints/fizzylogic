@@ -4,8 +4,15 @@ namespace FizzyLogic.Data
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+    /// <summary>
+    /// Provides model configuration for the <see cref="FizzyLogic.Models.Article"/> entity.
+    /// </summary>
     public class ArticleEntityConfiguration : IEntityTypeConfiguration<Article>
     {
+        /// <summary>
+        /// Provides the model configuration for the entity.
+        /// </summary>
+        /// <param name="builder">Entity model builder instance.</param>
         public void Configure(EntityTypeBuilder<Article> builder)
         {
             _ = builder.Property(x => x.Title).IsRequired().HasMaxLength(500);
