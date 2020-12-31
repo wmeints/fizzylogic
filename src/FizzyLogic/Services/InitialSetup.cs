@@ -8,6 +8,9 @@ namespace FizzyLogic.Services
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// Provides initial setup utiltities.
+    /// </summary>
     public static class InitialSetup
     {
         /// <summary>

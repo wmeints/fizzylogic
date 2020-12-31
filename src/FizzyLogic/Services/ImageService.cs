@@ -3,14 +3,18 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-
-    public interface IImageService
-    {
-        Task<string> UploadImage(string filename, Stream imageStream);
-    }
-
+    
+    /// <summary>
+    /// Implementation of the image service.
+    /// </summary>
     public class ImageService : IImageService
     {
+        /// <summary>
+        /// Uploads an image to the content folder.
+        /// </summary>
+        /// <param name="filename">Filename for the image.</param>
+        /// <param name="imageStream">Stream containing the image data.</param>
+        /// <returns>Returns the content path on the website for the image.</returns>
         public async Task<string> UploadImage(string filename, Stream imageStream)
         {
             var today = DateTime.UtcNow;

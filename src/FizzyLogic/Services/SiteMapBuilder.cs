@@ -6,17 +6,29 @@
     using System.Xml;
     using System.Xml.Linq;
 
+    /// <summary>
+    /// Provides utility functions to build a sitemap for the website.
+    /// </summary>
     public class SiteMapBuilder
     {
         private readonly XDocument _document;
         private readonly XElement _rootElement;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="SiteMapBuilder"/>.
+        /// </summary>
         public SiteMapBuilder()
         {
             _rootElement = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
             _document = new XDocument(_rootElement);
         }
 
+        /// <summary>
+        /// Includes a location in the sitemap.
+        /// </summary>
+        /// <param name="url">URL for the sitemap location.</param>
+        /// <param name="lastModified">Optional date the item was last changed.</param>
+        /// <param name="changeFrequency">Optional setting for update frequency.</param>
         public void WithLocation(string url, DateTime? lastModified, ChangeFrequency? changeFrequency)
         {
             var urlElement = new XElement(XName.Get("url", "http://www.sitemaps.org/schemas/sitemap/0.9"));
@@ -48,6 +60,10 @@
             _rootElement.Add(urlElement);
         }
 
+        /// <summary>
+        /// Generates the sitemap.xml content.
+        /// </summary>
+        /// <returns>Returns a string containing the sitemap.xml content.</returns>
         public string Build()
         {
             var outputBuilder = new StringBuilder();
