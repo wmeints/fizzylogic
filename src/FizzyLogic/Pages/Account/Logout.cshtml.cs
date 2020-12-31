@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace FizzyLogic.Pages.Account
+﻿namespace FizzyLogic.Pages.Account
 {
+    using System.Threading.Tasks;
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
     public class LogoutPageModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

@@ -1,59 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FizzyLogic.Data;
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
+﻿#pragma warning disable IDE0007
 
 namespace FizzyLogic.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using FizzyLogic.Data;
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
+
     public class ContentImport
     {
         public static async Task StartAsync(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            using (var scope = serviceProvider.CreateScope())
+            using var scope = serviceProvider.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            if (File.Exists("backup/database.json"))
             {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                Console.WriteLine("Detected import file. Starting content import...");
 
-                if (File.Exists("backup/database.json"))
-                {
-                    Console.WriteLine("Detected import file. Starting content import...");
+                dynamic backupData = await LoadBackupContentAsync();
+                ApplicationUser importUser = await LoadImportUser(userManager, configuration);
+                Dictionary<string, Category> importedCategories = LoadCategories(backupData);
+                Dictionary<string, string> importedPostCategories = LoadPostCategories(backupData);
 
-                    dynamic backupData = await LoadBackupContentAsync();
-                    ApplicationUser importUser = await LoadImportUser(userManager, configuration);
-                    Dictionary<string, Category> importedCategories = LoadCategories(backupData);
-                    Dictionary<string, string> importedPostCategories = LoadPostCategories(backupData);
+                List<Article> importedPosts = LoadArticles(
+                    backupData,
+                    importUser,
+                    importedCategories,
+                    importedPostCategories);
 
-                    List<Article> importedPosts = LoadArticles(
-                        backupData,
-                        importUser,
-                        importedCategories,
-                        importedPostCategories);
+                Console.WriteLine("Importing articles and categories into the database...");
 
-                    Console.WriteLine("Importing articles and categories into the database...");
+                await applicationDbContext.Categories.AddRangeAsync(
+                    importedPosts.Select(x => x.Category).Distinct().ToList());
 
-                    await applicationDbContext.Categories.AddRangeAsync(
-                        importedPosts.Select(x => x.Category).Distinct().ToList());
+                await applicationDbContext.Articles.AddRangeAsync(importedPosts);
 
-                    await applicationDbContext.Articles.AddRangeAsync(importedPosts);
+                _ = await applicationDbContext.SaveChangesAsync();
 
-                    await applicationDbContext.SaveChangesAsync();
+                // Make sure to move the file so we don't import it twice.
+                File.Move("backup/database.json", "backup/database.json.imported");
 
-                    // Make sure to move the file so we don't import it twice.
-                    File.Move("backup/database.json", "backup/database.json.imported");
-
-                    Console.WriteLine("Done importing content.");
-                }
+                Console.WriteLine("Done importing content.");
             }
+
         }
 
         private static Dictionary<string, string> LoadPostCategories(dynamic backupData)
@@ -88,7 +86,9 @@ namespace FizzyLogic.Services
         {
             Console.WriteLine("Parsing article data...");
 
-            List<Article> importedPosts = new List<Article>();
+
+
+            var importedPosts = new List<Article>();
             dynamic posts = backupData.data.posts;
 
             foreach (dynamic post in posts)
@@ -202,3 +202,5 @@ namespace FizzyLogic.Services
         }
     }
 }
+
+#pragma warning restore IDE0007

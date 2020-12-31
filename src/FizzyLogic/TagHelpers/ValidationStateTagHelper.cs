@@ -1,12 +1,13 @@
-﻿using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-
-namespace FizzyLogic.TagHelpers
+﻿namespace FizzyLogic.TagHelpers
 {
+    using System.Text.Encodings.Web;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.TagHelpers;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Microsoft.AspNetCore.Razor.TagHelpers;
+
+
     [HtmlTargetElement("input", Attributes = "validation-state-for")]
     public class ValidationStateTagHelper : TagHelper
     {
@@ -21,7 +22,7 @@ namespace FizzyLogic.TagHelpers
             {
                 if (ViewContext.ModelState[For.Name].ValidationState == ModelValidationState.Invalid)
                 {
-                    output.AddClass("is-invalid",HtmlEncoder.Default);
+                    output.AddClass("is-invalid", HtmlEncoder.Default);
                 }
             }
 

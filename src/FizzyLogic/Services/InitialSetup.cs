@@ -1,33 +1,32 @@
-using System;
-using System.Threading.Tasks;
-using FizzyLogic.Data;
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
 namespace FizzyLogic.Services
 {
+    using System;
+    using System.Threading.Tasks;
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
     public static class InitialSetup
     {
         /// <summary>
         /// Ensures that the website has a super user. 
         /// </summary>
-        public static async Task EnsureSuperUser(IConfiguration configuration, IServiceProvider serviceProvider) 
+        public static async Task EnsureSuperUser(IConfiguration configuration, IServiceProvider serviceProvider)
         {
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("FizzyLogic");
 
-            if(configuration.GetSection("SuperUser") == null)
+            if (configuration.GetSection("SuperUser") == null)
             {
-                logger.LogInformation("Couldn't find a 'SuperUser' " + 
+                logger.LogInformation("Couldn't find a 'SuperUser' " +
                     "section in the configuration. Skipping super user setup.");
 
                 return;
             }
 
-            if(configuration["SuperUser:EmailAddress"] == null)
+            if (configuration["SuperUser:EmailAddress"] == null)
             {
                 logger.LogWarning("Can't find e-mail address for the super user." +
                     " Please make sure you have your super user configured correctly.");
@@ -35,7 +34,7 @@ namespace FizzyLogic.Services
                 return;
             }
 
-            if(configuration["SuperUser:Password"] == null)
+            if (configuration["SuperUser:Password"] == null)
             {
                 logger.LogWarning("Can't find password for the super user. " +
                     "Please make sure you have your super user configured correctly.");
@@ -43,25 +42,30 @@ namespace FizzyLogic.Services
                 return;
             }
 
-            using(var scope = serviceProvider.CreateScope())
+            using var scope = serviceProvider.CreateScope();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var superUser = await userManager.FindByEmailAsync(configuration["SuperUser:EmailAddress"]);
+
+            if (superUser == null)
             {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var superUser = await userManager.FindByEmailAsync(configuration["SuperUser:EmailAddress"]);
+                logger.LogInformation("Super user doesn't exist yet. Creating a new super user.");
 
-                if(superUser == null)
+                superUser = new ApplicationUser
                 {
-                    logger.LogInformation("Super user doesn't exist yet. Creating a new super user.");
+                    UserName = configuration["SuperUser:EmailAddress"],
+                    Email = configuration["SuperUser:EmailAddress"],
+                    EmailConfirmed = true
+                };
 
-                    superUser = new ApplicationUser
-                    {
-                        UserName = configuration["SuperUser:EmailAddress"],
-                        Email = configuration["SuperUser:EmailAddress"],
-                        EmailConfirmed = true
-                    };
+                var createUserResult = await userManager.CreateAsync(superUser, configuration["SuperUser:Password"]);
 
-                    await userManager.CreateAsync(superUser, configuration["SuperUser:Password"]);
+                if (!createUserResult.Succeeded)
+                {
+                    logger.LogWarning("Unable to create user", createUserResult.Errors);
                 }
             }
+
         }
     }
 }

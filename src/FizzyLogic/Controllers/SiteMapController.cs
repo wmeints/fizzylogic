@@ -1,17 +1,12 @@
-﻿using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using FizzyLogic.Data;
-using FizzyLogic.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-namespace FizzyLogic.Controllers
+﻿namespace FizzyLogic.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using FizzyLogic.Data;
+    using FizzyLogic.Services;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     [ApiController]
     public class SiteMapController : ControllerBase
     {
@@ -32,15 +27,19 @@ namespace FizzyLogic.Controllers
             siteMapBuilder.WithLocation("/", null, null);
             siteMapBuilder.WithLocation("/about", null, null);
 
+#pragma warning disable IDE0050
+
             var articles = await _applicationDbContext.Articles
-                .Where(x=>x.DatePublished != null)
+                .Where(x => x.DatePublished != null)
                 .OrderByDescending(x => x.DatePublished)
-                .Select(x=> new { x.Slug, x.DatePublished })
+                .Select(x => new { x.Slug, x.DatePublished })
                 .ToListAsync();
+
+#pragma warning restore IDE0050
 
             foreach (var article in articles)
             {
-                var itemUrl = 
+                var itemUrl =
                     $"/{article.DatePublished.Value.Year:0000}/" +
                     $"{article.DatePublished.Value.Month:00}/" +
                     $"{article.DatePublished.Value.Day:00}/" +

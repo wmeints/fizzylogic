@@ -1,9 +1,9 @@
-using FizzyLogic.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
 namespace FizzyLogic.Data
 {
+    using FizzyLogic.Models;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
@@ -15,8 +15,8 @@ namespace FizzyLogic.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new ArticleEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
+            _ = modelBuilder.ApplyConfiguration(new ArticleEntityConfiguration());
+            _ = modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
         }
     }
 }
