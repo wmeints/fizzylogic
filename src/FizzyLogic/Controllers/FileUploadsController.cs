@@ -9,6 +9,9 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    /// <summary>
+    /// Handles file uploads from the markdown editor in the admin panel.
+    /// </summary>
     [Authorize]
     [ApiController]
     public class FileUploadsController : ControllerBase
@@ -23,11 +26,19 @@
 
         private readonly IImageService _imageService;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="FileUploadsController"/>.
+        /// </summary>
+        /// <param name="imageService">The service to handle the image data.</param>
         public FileUploadsController(IImageService imageService)
         {
             _imageService = imageService;
         }
 
+        /// <summary>
+        /// Handles an incoming file from the markdown editor
+        /// </summary>
+        /// <returns>Returns 202 when the image is stored. Otherwise returns 400 for bad input.</returns>
         [HttpPost]
         [Route("/api/images")]
         public async Task<IActionResult> UploadImage()

@@ -12,16 +12,27 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Provides the /rss endpoint for the website.
+    /// </summary>
     [ApiController]
     public class RssController : ControllerBase
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RssController"/>.
+        /// </summary>
+        /// <param name="applicationDbContext">DbContext for retrieving article content.</param>
         public RssController(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
+        /// <summary>
+        /// Retrieves the RSS feed for the website containing the last 50 articles.
+        /// </summary>
+        /// <returns>Returns OK with the RSS content.</returns>
         [HttpGet]
         [Route("/rss")]
         public async Task<IActionResult> Index()

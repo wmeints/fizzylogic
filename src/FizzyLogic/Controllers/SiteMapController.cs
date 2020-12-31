@@ -7,16 +7,27 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Provides /sitemap.xml endpoint for the website.
+    /// </summary>
     [ApiController]
     public class SiteMapController : ControllerBase
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="SiteMapController"/>.
+        /// </summary>
+        /// <param name="applicationDbContext">DbContext to retrieve the content of the website.</param>
         public SiteMapController(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
+        /// <summary>
+        /// Renders the sitemap for the website.
+        /// </summary>
+        /// <returns>Returns OK with the sitemap.xml content.</returns>
         [HttpGet]
         [Route("/sitemap.xml")]
         [ResponseCache(Duration = 86400)]
