@@ -3,6 +3,7 @@ $fa-font-path: "../fonts";
 @import "./fontawesome/fontawesome";
 @import "./fontawesome/light";
 @import "./fontawesome/duotone";
+@import "./fontawesome/brands";
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
@@ -27,4 +28,8 @@ body {
 
 .validation-summary-valid {
     display: none;
+}
+
+.list-contact-options > li > a {
+    text-decoration: none;
 }
