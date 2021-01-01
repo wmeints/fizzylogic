@@ -1,0 +1,17 @@
+[Unit]
+Description=Personal website
+
+[Service]
+WorkingDirectory=/var/www/blog
+ExecStart=/usr/bin/dotnet /var/www/blog/FizzyLogic.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=fizzylogic
+User=fizzylogic
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+# Add your secrets as environment variables here.
+
+[Install]
+WantedBy=multi-user.target
