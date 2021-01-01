@@ -1,7 +1,7 @@
 ﻿namespace FizzyLogic.Services
 {
     using System.Text.RegularExpressions;
-    
+
     /// <summary>
     /// Provides a technique to turn title information into a nice url.
     /// </summary>
@@ -17,7 +17,9 @@
         /// <returns>Returns the slugified version of the title.</returns>
         public string Process(string title)
         {
-            return DashesPattern.Replace(NonAlphaNumericPattern.Replace(title.ToLowerInvariant(), "-"), "-").TrimEnd('-');
+            return DashesPattern
+                .Replace(NonAlphaNumericPattern.Replace(title.ToLowerInvariant(), "-"), "-")
+                .TrimEnd('-');
         }
     }
 }

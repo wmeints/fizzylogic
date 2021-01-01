@@ -2,7 +2,7 @@ namespace FizzyLogic
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
-    
+
     /// <summary>
     /// Main class for the application.
     /// </summary>
