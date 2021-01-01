@@ -108,13 +108,10 @@ namespace FizzyLogic
             });
 
             // On nginx I'm using a static mapping to host the content in wwwroot. 
-            // So I don't need the static files middleware. On my development environment I don't have nginx.
-            if (env.IsDevelopment())
-            {
-                _ = app.UseStaticFiles();
-            }
-
+            // So I don't need the static files middleware. Blazor is the one evil exception why I need the static 
+            // files middleware anyway.
             _ = app
+                .UseStaticFiles()
                 .UseRouting()
                 .UseAuthentication()
                 .UseAuthorization()
