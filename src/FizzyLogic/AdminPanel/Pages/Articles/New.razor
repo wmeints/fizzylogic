@@ -188,7 +188,7 @@ else
     <div class="row mb-4 justify-content-end">
         <div class="col-auto">
             <div class="float-start dropdown ms-1">
-                <button class="btn btn-outline-secondary mr-1" data-toggle="dropdown" @onclick="OnToggleSettings">
+                <button id="toggleSettingsPanel" class="btn btn-outline-secondary mr-1" data-toggle="dropdown" @onclick="OnToggleSettings">
                     <i class="fal fa-cog"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right shadow @(IsSettingsVisible ? "show" : "")" style="width: 450px; margin-left: -408px">
@@ -221,11 +221,11 @@ else
                 </div>
 
             </div>
-            <button class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
+            <button id="saveArticle" class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
 
             @if (CanPublish)
             {
-                <button class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
+                <button id="publishArticle" class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
             }
         </div>
     </div>

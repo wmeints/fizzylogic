@@ -13,9 +13,13 @@
         });
     };
 
-    contentEditor.getContent = function() {
+    contentEditor.getContent = function () {
         return contentEditor.instance.getMarkdown();
-    }
+    };
+
+    contentEditor.setContent = function (value) {
+        contentEditor.instance.setMarkdown(value);
+    };
     
     contentEditor.activate = function(content) {
         contentEditor.instance = new toastui.Editor({
