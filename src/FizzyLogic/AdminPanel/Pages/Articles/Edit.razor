@@ -223,11 +223,11 @@ else
                 </div>
 
             </div>
-            <button class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
+            <button id="saveArticle" class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
 
             @if (CanPublish)
             {
-                <button class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
+                <button id="publishArticle" class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
             }
         </div>
     </div>
