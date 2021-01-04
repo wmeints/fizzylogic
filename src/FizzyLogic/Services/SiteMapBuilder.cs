@@ -11,6 +11,8 @@
     /// </summary>
     public class SiteMapBuilder
     {
+        public const string Namespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
+
         private readonly XDocument _document;
         private readonly XElement _rootElement;
 
@@ -19,7 +21,7 @@
         /// </summary>
         public SiteMapBuilder()
         {
-            _rootElement = new XElement(XName.Get("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9"));
+            _rootElement = new XElement(XName.Get("urlset", Namespace));
             _document = new XDocument(_rootElement);
         }
 
@@ -31,20 +33,20 @@
         /// <param name="changeFrequency">Optional setting for update frequency.</param>
         public void WithLocation(string url, DateTime? lastModified, ChangeFrequency? changeFrequency)
         {
-            var urlElement = new XElement(XName.Get("url", "http://www.sitemaps.org/schemas/sitemap/0.9"));
+            var urlElement = new XElement(XName.Get("url", Namespace));
 
-            urlElement.Add(new XElement(XName.Get("loc", "http://www.sitemaps.org/schemas/sitemap/0.9"), url));
+            urlElement.Add(new XElement(XName.Get("loc", Namespace), url));
 
             if (lastModified != null)
             {
                 urlElement.Add(
-                    new XElement(XName.Get("lastmod", "http://www.sitemaps.org/schemas/sitemap/0.9"),
+                    new XElement(XName.Get("lastmod", Namespace),
                     lastModified.Value.ToString("yyyy-M-d")));
             }
 
             if (changeFrequency != null)
             {
-                urlElement.Add(new XElement(XName.Get("changefreq", "http://www.sitemaps.org/schemas/sitemap/0.9"), changeFrequency switch
+                urlElement.Add(new XElement(XName.Get("changefreq", Namespace), changeFrequency switch
                 {
                     ChangeFrequency.Always => "always",
                     ChangeFrequency.Hourly => "hourly",
