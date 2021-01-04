@@ -73,7 +73,8 @@ namespace FizzyLogic
 
             _ = services
                 .AddSingleton<Slugifier>()
-                .AddSingleton<IImageService, ImageService>();
+                .AddSingleton<IImageService, ImageService>()
+                .AddSingleton<IClock, DefaultClock>();
         }
 
         /// <summary>

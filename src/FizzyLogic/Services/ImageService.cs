@@ -9,6 +9,17 @@
     /// </summary>
     public class ImageService : IImageService
     {
+        private readonly IClock _clock;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ImageService"/>
+        /// </summary>
+        /// <param name="clock">Clock implementation to use.</param>
+        public ImageService(IClock clock)
+        {
+            _clock = clock;
+        }
+
         /// <summary>
         /// Uploads an image to the content folder.
         /// </summary>
@@ -17,7 +28,7 @@
         /// <returns>Returns the content path on the website for the image.</returns>
         public async Task<string> UploadImage(string filename, Stream imageStream)
         {
-            var today = DateTime.UtcNow;
+            var today = _clock.UtcNow;
 
             var outputFolder = Path.Join(
                 "wwwroot/content/images/",
