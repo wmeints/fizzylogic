@@ -1,5 +1,6 @@
 ﻿namespace FizzyLogic.Services
 {
+    using System.Text;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -7,8 +8,8 @@
     /// </summary>
     public class Slugifier
     {
-        private static readonly Regex NonAlphaNumericPattern = new Regex("[^a-z0-9]+");
-        private static readonly Regex DashesPattern = new Regex("-+");
+        private static readonly Regex NonAlphaNumericPattern = new("[^a-z0-9]+");
+        private static readonly Regex DashesPattern = new("-+");
 
         /// <summary>
         /// Processes a title into a slug.
@@ -18,8 +19,24 @@
         public string Process(string title)
         {
             return DashesPattern
-                .Replace(NonAlphaNumericPattern.Replace(title.ToLowerInvariant(), "-"), "-")
+                .Replace(NonAlphaNumericPattern.Replace(NormalizeString(title).ToLower(), "-"), "-")
                 .TrimEnd('-');
+        }
+
+        private static string NormalizeString(string text)
+        {
+            var outputBuilder = new StringBuilder();
+            var normalizedText = text.Normalize(NormalizationForm.FormD);
+
+            foreach (var c in normalizedText)
+            {
+                if (char.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    _ = outputBuilder.Append(c);
+                }
+            }
+
+            return outputBuilder.ToString();
         }
     }
 }
