@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace FizzyLogic.Services
+﻿namespace FizzyLogic.Services
 {
+    using System;
+    
     /// <summary>
     /// Default implementation of the application clock.
     /// </summary>
