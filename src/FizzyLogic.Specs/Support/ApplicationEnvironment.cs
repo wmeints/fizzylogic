@@ -165,7 +165,7 @@
         {
             var chromeOptions = new ChromeOptions();
 
-            //chromeOptions.AddArgument("headless");
+            chromeOptions.AddArgument("headless");
             chromeOptions.AddArgument("disable-gpu");
 
             _driver = new ChromeDriver(chromeOptions);
