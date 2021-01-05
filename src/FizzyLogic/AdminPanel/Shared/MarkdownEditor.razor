@@ -3,6 +3,9 @@
     [Parameter]
     public string Content { get; set; }
 
+    [Parameter]
+    public bool IsInvalid { get; set; }
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JavaScript.InvokeVoidAsync("contentEditor.activate", Content);
@@ -13,7 +16,7 @@
         return await JavaScript.InvokeAsync<string>("contentEditor.getContent");
     }
 }
-<div id="editor">
+<div id="editor" class="@(IsInvalid ? "is-invalid" : "")">
     
 </div>
 

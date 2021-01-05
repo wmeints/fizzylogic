@@ -227,6 +227,7 @@ else
                 </div>
 
             </div>
+            <NavLink target="_blank" href="@($"/Preview/{Id}")" class="float-start btn btn-outline-secondary ms-1">Preview</NavLink>
             <button id="saveArticle" class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
 
             @if (CanPublish)
@@ -237,8 +238,7 @@ else
     </div>
     <div class="row mb-2">
         <div class="col">
-            <label for="title">Title</label>
-            <input type="text" id="title" class="form-control @(IsTitleValid ? "" : "is-invalid")" placeholder="My awesome article" @bind="Title"/>
+            <input type="text" id="title" class="form-control form-control-lg @(IsTitleValid ? "" : "is-invalid")" placeholder="Enter the title of your article" @bind="Title"/>
         </div>
     </div>
 
