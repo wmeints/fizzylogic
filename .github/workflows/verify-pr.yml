@@ -1,0 +1,21 @@
+# This workflow validates PR branches before they can be merged to main.
+name: Validate PR
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.1.101
+      - name: Build sources
+        run: dotnet build src/FizzyLogic.sln
+      - name: Run unit-tests
+        run: dotnet test src/FizzyLogic.Tests/FizzyLogic.Tests.csproj
+      - name: Run acceptance tests
+        run: dotnet test src/FizzyLogic.Specs/FizzyLogic.Specs.csproj
