@@ -33,3 +33,8 @@ body {
 .list-contact-options > li > a {
     text-decoration: none;
 }
+
+#editor.is-invalid {
+    border: 1px solid red;
+    border-radius: 3px;
+} 

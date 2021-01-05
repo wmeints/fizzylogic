@@ -1,9 +1,7 @@
 ﻿@page "/Admin/Articles/New"
 @using Microsoft.AspNetCore.Identity
 @using Markdig
-@using System.IO
 @using FizzyLogic.Markdown
-@using Markdig.Renderers
 @inject Slugifier Slugifier
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @inject UserManager<ApplicationUser> UserManager
@@ -13,6 +11,8 @@
     private MarkdownEditor _editorInstance;
 
     private Article Article { get; set; }
+
+    private string PreviewLink { get; set; }
     
     private string SelectedCategoryId { get; set; } = "-1";
     
@@ -164,6 +164,11 @@
         IsSettingsVisible = !IsSettingsVisible;
     }
 
+    private async Task OnPreviewClick()
+    {
+        await SaveChangesAsync(false);
+        PreviewLink = $"/Preview/{Article.Id}";
+    }
 }
 
 <nav aria-label="breadcrumb">
@@ -187,11 +192,24 @@ else
         <div class="row">
             <div class="col">
                 <div class="alert alert-danger">
-                    Unable to save or publish. Please make sure the content is correctly specified.
+                    Unable to save or publish. Please make sure to fill out the required fields. 
+                    They may be hidden in the settings panel.
                 </div>
             </div>
         </div>
     }
+    
+    @if (!string.IsNullOrEmpty(PreviewLink))
+    {
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-info">
+                    Preview is ready. <a target="_blank" href="@PreviewLink">Check it out!</a>
+                </div>
+            </div>
+        </div>
+    }
+    
     <div class="row mb-4 justify-content-end">
         <div class="col-auto">
             <div class="float-start dropdown ms-1">
@@ -228,8 +246,8 @@ else
                 </div>
 
             </div>
+            <button id="previewArticle" class="float-start btn btn-outline-secondary ms-1" @onclick="OnPreviewClick">Preview</button>
             <button id="saveArticle" class="float-start btn @(CanPublish ? "btn-outline-secondary" : "btn-outline-primary") ms-1" @onclick="OnSaveClick">Save</button>
-
             @if (CanPublish)
             {
                 <button id="publishArticle" class="float-start btn btn-outline-primary ms-1" @onclick="OnPublishClick">Publish</button>
@@ -238,14 +256,13 @@ else
     </div>
     <div class="row mb-2">
         <div class="col">
-            <label for="title">Title</label>
-            <input type="text" id="title" class="form-control @(IsTitleValid ? "" : "is-invalid")" placeholder="My awesome article" @bind="Title"/>
+            <input type="text" id="title" class="form-control form-control-lg @(IsTitleValid ? "" : "is-invalid")" placeholder="Enter the title of your article" @bind="Title"/>
         </div>
     </div>
 
     <div class="row mt-4">
         <div class="col">
-            <MarkdownEditor Content="" @ref="_editorInstance"></MarkdownEditor>
+            <MarkdownEditor Content="" @ref="_editorInstance" IsInvalid="!IsBodyValid"></MarkdownEditor>
         </div>
     </div>
 }
