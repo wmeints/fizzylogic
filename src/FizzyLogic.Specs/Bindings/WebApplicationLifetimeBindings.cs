@@ -16,7 +16,7 @@
         public static void BeforeTestRun()
         {
             ApplicationEnvironment.Initialize();
-            //ApplicationEnvironment.Start();
+            ApplicationEnvironment.Start();
             ApplicationEnvironment.InitializeBrowser();
         }
 
@@ -27,7 +27,7 @@
         public static void AfterTestRun()
         {
             ApplicationEnvironment.CloseBrowser();
-            //ApplicationEnvironment.Shutdown();
+            ApplicationEnvironment.Shutdown();
             ApplicationEnvironment.Reset();
         }
     }
