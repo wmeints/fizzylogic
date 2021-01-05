@@ -6,6 +6,16 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,3 +29,5 @@ jobs:
         run: dotnet test src/FizzyLogic.Tests/FizzyLogic.Tests.csproj
       - name: Run acceptance tests
         run: dotnet test src/FizzyLogic.Specs/FizzyLogic.Specs.csproj
+        env:
+          CONNECTIONSTRINGS__DEFAULTDATABASE: host=postgres;database=fizzylogic;username=postgres;password=postgres
