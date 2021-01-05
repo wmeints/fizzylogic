@@ -29,7 +29,7 @@
         [Fact]
         public void ThenTheRelativePathToTheImageIsReturned()
         {
-            _ = Result.Should().Be("/content/2020/01/01/test.png");
+            _ = Result.Should().Be("/content/images/2020/01/01/test.png");
         }
 
         [Fact]
