@@ -63,9 +63,28 @@ These are all set through variables in the service configuration.
 
 ### Deploying the website files to the webserver
 
-I'm using `scp` to copy the deployment files to the webserver. After I've done
-that, I login using SSH and copy them to the right location, which 
-is `/var/www/blog`. 
+I'm using `rsync` to deploy my files to the remote server. Specifically, I'm using the following command:
+
+```
+rsync -r -zP -o -g dist/ user@remote-host:<path>
+```
+
+I'm using the following command line options:
+
+* `-r` - Recursive copy the files from the `dist/` folder.
+* `-z` - Compress the files during transfer to save bandwidth.
+* `-P` - Allow for partial transfers, so we can restart should anything go wrong.
+* `-o` - Preserve the owner of the files on the destination location.
+* `-g` - Preserve the group owner of the files on the destination location.
+
+Keeping the owner and group of the files intact on the destination location is important, 
+since I've set up specific permissions on my webserver that allow the deployment user,
+the nginx user, and the service user to access the same files.
+
+**Note:** You will have to create a dedicated group for the website on your server and 
+add the nginx user, the application service user, and the deployment user to this group.
+Also, you'll need to make the deployment user the owner of the files in the target location.
+Otherwise the `-o` and `-g` options will cause permission errors.
 
 ### Service configuration on the webserver
 
