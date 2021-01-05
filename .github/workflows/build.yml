@@ -29,7 +29,7 @@ jobs:
         run: dotnet build src/FizzyLogic.sln
       - name: Run unit-tests
         run: dotnet test src/FizzyLogic.Tests/FizzyLogic.Tests.csproj
-      - name: Run acceptance tests
-        run: dotnet test src/FizzyLogic.Specs/FizzyLogic.Specs.csproj
-        env:
-          CONNECTIONSTRINGS__DEFAULTDATABASE: host=postgres;database=fizzylogic;username=postgres;password=postgres
+      # - name: Run acceptance tests
+      #   run: dotnet test src/FizzyLogic.Specs/FizzyLogic.Specs.csproj
+      #   env:
+      #     CONNECTIONSTRINGS__DEFAULTDATABASE: host=postgres;database=fizzylogic;username=postgres;password=postgres
