@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Markdig
 @using System.IO
+@using FizzyLogic.Markdown
+@using Markdig.Renderers
 @inject Slugifier Slugifier
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @inject UserManager<ApplicationUser> UserManager
@@ -65,20 +67,25 @@
 
     private async Task SaveChangesAsync(bool publish)
     {
+        var markdownPipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .UseFizzyLogicExtensions()
+            .Build();
+        
         void UpdateArticleProperties(ApplicationUser author, Category category, string featuredImageUrl)
         {
             Article.Title = Title;
             Article.Author = author;
             Article.Category = category;
             Article.Markdown = Body;
-            Article.Html = Markdown.ToHtml(Body);
+            Article.Html = Markdown.ToHtml(Body, markdownPipeline);
             Article.FeaturedImage = featuredImageUrl;
             Article.Excerpt = Excerpt;
             Article.DateCreated = DateTime.UtcNow;
             Article.Slug = Slugifier.Process(Title);
 
-    // You can only publish once, and we don't want to break the URL.
-    // So instead of blindly overwriting the publication date, set it only once.
+            // You can only publish once, and we don't want to break the URL.
+            // So instead of blindly overwriting the publication date, set it only once.
             if (publish && Article.DatePublished == null)
             {
                 Article.DatePublished = DateTime.UtcNow;
@@ -104,7 +111,7 @@
 
             if (string.IsNullOrEmpty(Excerpt))
             {
-                var plainTextContent = Markdown.ToPlainText(Body);
+                var plainTextContent = Markdown.ToPlainText(Body, markdownPipeline);
                 Excerpt = plainTextContent.Substring(0, Math.Min(plainTextContent.Length, 250));
             }
 

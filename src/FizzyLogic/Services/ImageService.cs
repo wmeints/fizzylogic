@@ -52,7 +52,7 @@
                 }
             }
 
-            return $"/content/{today.Year:0000}/{today.Month:00}/{today.Day:00}/{filename}";
+            return $"/content/images/{today.Year:0000}/{today.Month:00}/{today.Day:00}/{filename}";
         }
     }
 }

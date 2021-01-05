@@ -1,8 +1,7 @@
 ﻿@page "/Admin/Articles/Edit/{id:int}"
-@using Microsoft.EntityFrameworkCore.Internal
 @using Markdig
 @using Microsoft.AspNetCore.Identity
-@using System.IO
+@using FizzyLogic.Markdown
 @inject Slugifier Slugifier
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @inject UserManager<ApplicationUser> UserManager
@@ -11,31 +10,31 @@
 
 @code {
     private MarkdownEditor _editorInstance;
-    
+
     private string SelectedCategoryId { get; set; } = "-1";
-    
+
     private string Title { get; set; } = "";
-    
+
     private string Body { get; set; } = "";
-    
+
     private string Excerpt { get; set; } = "";
-    
+
     private IBrowserFile FeaturedImageFile { get; set; }
-    
+
     private IEnumerable<Category> AvailableCategories { get; set; }
-    
+
     private bool IsLoading { get; set; } = true;
-    
+
     private bool IsTitleValid { get; set; } = true;
-    
+
     private bool IsCategoryValid { get; set; } = true;
-    
+
     private bool IsBodyValid { get; set; } = true;
-    
+
     private bool IsSettingsVisible { get; set; }
-    
+
     private bool CanPublish { get; set; } = true;
-    
+
     private bool CanEdit { get; set; } = true;
 
     [Parameter]
@@ -82,6 +81,11 @@
 
     private async Task SaveChangesAsync(bool publish)
     {
+        var markdownPipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .UseFizzyLogicExtensions()
+            .Build();
+
         var valid = await IsContentValidAsync();
 
         if (valid)
@@ -101,14 +105,14 @@
 
             if (string.IsNullOrEmpty(Excerpt))
             {
-                var plainTextContent = Markdown.ToPlainText(Body);
+                var plainTextContent = Markdown.ToPlainText(Body, markdownPipeline);
                 Excerpt = plainTextContent.Substring(0, Math.Min(plainTextContent.Length, 250));
             }
 
             article.Title = Title;
             article.Category = category;
             article.Markdown = Body;
-            article.Html = Markdown.ToHtml(Body);
+            article.Html = Markdown.ToHtml(Body, markdownPipeline);
             article.Excerpt = Excerpt;
 
             // You can only publish once, and we don't want to break the URL.
@@ -136,7 +140,7 @@
     private async Task<string> UploadFeaturedImage(IBrowserFile featuredImageFile)
     {
         return await ImageService.UploadImage(
-            featuredImageFile.Name, 
+            featuredImageFile.Name,
             featuredImageFile.OpenReadStream());
     }
 
