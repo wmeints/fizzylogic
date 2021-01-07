@@ -41,4 +41,44 @@
     @extend .shadow;
     @extend .rounded-3;
   }
+
+  .info::before {
+      @extend .icon::before;
+
+      font-family: "Font Awesome 5 Pro";
+      font-weight: 900;
+      content: "\f129";
+      color: darken(#dee2e6, 20%);
+  }
+
+  .warn::before {
+      @extend .icon::before;
+
+      font-family: "Font Awesome 5 Pro";
+      font-weight: 900;
+      content: "\f06a";
+      color: darken(#ffecb5, 20%);
+  }
+
+  .info {
+    @extend .border;
+    @extend .rounded;
+    background-color: #f5f5f5;
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-right: 15px;
+    margin-block-end: 1em;
+    margin-block-start: 1em;
+  }
+
+  .warn {
+    @extend .rounded;
+    background-color: #fff3cd;
+    border: 1px solid #ffecb5;
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-right: 15px;
+    margin-block-end: 1em;
+    margin-block-start: 1em;
+  }
 }
