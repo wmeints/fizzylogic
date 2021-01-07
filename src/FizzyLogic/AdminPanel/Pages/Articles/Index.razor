@@ -123,7 +123,11 @@ else
                     var currentArticle = article;
                     
                     <tr>
-                        <td>@currentArticle.Title</td>
+                        <td>
+                            <NavLink href="@ArticleEditorUrl(currentArticle.Id)">
+                                @currentArticle.Title
+                            </NavLink>
+                        </td>
                         <td>@currentArticle.Category.Title</td>
                         <td>
                             @if (currentArticle.DatePublished == null)
