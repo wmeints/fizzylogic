@@ -3,6 +3,24 @@
 @{
     ViewBag.Title = @Model.Article.Title;
 }
+@section Head {
+    <meta property="og:title" value="@Model.Article.Title">
+    <meta property="og:description" value="@Model.Article.Excerpt">
+    @if(!string.IsNullOrEmpty(Model.Article.FeaturedImage))
+    {
+        <meta property="og:image" value="@Model.Article.FeaturedImage">
+    }
+    <meta property="og:url" value="@Url.Article(Model.Article)"/>
+    <meta property="twitter:title" value="@Model.Article.Title">
+    <meta property="twitter:description" value="@Model.Article.Excerpt">
+    @if(!string.IsNullOrEmpty(Model.Article.FeaturedImage))
+    {
+        <meta property="twitter:image" value="@Model.Article.FeaturedImage">
+    }
+    <meta property="twitter:card" value="summary_large_image"/>
+    <meta property="twitter:site" value="@willem_meints"/>
+    <meta property="og:site_name" content="Willem's Fizzy Logic">
+}
 <div class="container">
     @if(!string.IsNullOrEmpty(Model.Article.FeaturedImage))
     {
