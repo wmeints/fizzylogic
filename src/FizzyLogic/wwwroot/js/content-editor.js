@@ -27,6 +27,7 @@
             previewStyle: 'vertical',
             height: '500px',
             initialValue: content,
+            previewStyle: 'tab',
             hooks: {
                 addImageBlobHook: (blob, callback) => {
                     contentEditor.uploadImage(blob).then(url => {
