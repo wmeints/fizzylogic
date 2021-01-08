@@ -56,19 +56,21 @@
             </article>
         </div>
     </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-4">
         <div class="col-7">
             <div id="disqus_thread"></div>
             <script>
                 var disqus_config = function () {
-                this.page.url = '@Url.Article(Model.Article)';
-                this.page.identifier = '@Url.Article(Model.Article)';
+                    this.page.url = 'https://fizzylogic.nl/@Url.Article(Model.Article)';
+                    this.page.identifier = '@($"{Model.Article.Id}-{Model.Article.Slug}")';
+                    this.page.title = '@Model.Article.Title';
                 };
+
                 (function() { // DON'T EDIT BELOW THIS LINE
-                var d = document, s = d.createElement('script');
-                s.src = 'https://fizzylogic.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://fizzylogic.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
                 })();
             </script>
             <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
