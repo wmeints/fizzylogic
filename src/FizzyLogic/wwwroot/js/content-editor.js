@@ -25,7 +25,7 @@
         contentEditor.instance = new toastui.Editor({
             el: document.querySelector('#editor'),
             previewStyle: 'vertical',
-            height: '500px',
+            height: 'auto',
             initialValue: content,
             previewStyle: 'tab',
             hooks: {

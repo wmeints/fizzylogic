@@ -1,3 +1,19 @@
 {
-    "omnisharp.enableRoslynAnalyzers": true
+    "omnisharp.enableRoslynAnalyzers": true,
+    "grammarly.overrides": [
+        {
+            "files": [
+                "**/features/manage-content.feature"
+            ],
+            "config": {
+                "audience": "knowledgeable",
+                "dialect": "american",
+                "domain": "general",
+                "emotions": [],
+                "goals": [
+                    "describe"
+                ]
+            }
+        }
+    ]
 }

@@ -2,17 +2,12 @@
 {
     using FizzyLogic.Specs.Models;
     using FizzyLogic.Specs.Support;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using TechTalk.SpecFlow;
 
     [Binding]
     public class AuthenticationSteps
     {
-        [Given("I am authenticated as an administrator")]
+        [Given("I am am logged in as an administrator")]
         public void AuthenticateUserStep()
         {
             _ = ApplicationEnvironment

@@ -28,5 +28,10 @@
   <ItemGroup>
     <ProjectReference Include="..\FizzyLogic\FizzyLogic.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <SpecFlowFeatureFiles Include="..\..\features\**\*.feature" >
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+    </SpecFlowFeatureFiles>
+  </ItemGroup>
 </Project>
