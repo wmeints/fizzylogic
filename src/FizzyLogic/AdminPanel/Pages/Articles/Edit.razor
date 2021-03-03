@@ -141,7 +141,7 @@
     {
         return await ImageService.UploadImage(
             featuredImageFile.Name,
-            featuredImageFile.OpenReadStream());
+            featuredImageFile.OpenReadStream(maxAllowedSize: 2048000));
     }
 
     private void OnFileSelected(InputFileChangeEventArgs e)
