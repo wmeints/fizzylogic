@@ -1,4 +1,7 @@
-﻿@model Article
+﻿@model Article 
+@{
+    var article = Model;
+}
 <div class="col article-card-container">
     <div class="card article-card h-100 border-light shadow-sm">
         @if(!string.IsNullOrEmpty(Model.FeaturedImage))
@@ -8,15 +11,9 @@
             </div>
             <article class="card-body">
                 <header>
-                    <a asp-page="/Article" 
-                       asp-route-year="@Model.DatePublished.Value.Year"
-                       asp-route-month="@Model.DatePublished.Value.Month"
-                       asp-route-day="@Model.DatePublished.Value.Day"
-                       asp-route-slug="@Model.Slug"
-                       class="card-link"
-                    >
+                    <permalink article="article" class="card-link">
                         <h2 class="h5 card-title">@Model.Title</h2>
-                    </a>
+                    </permalink>
                 </header>
                 <main>
                     <div class="small text-muted mb-2">
@@ -24,12 +21,7 @@
                         Filed in <a asp-page="/Category" asp-route-slug="@Model.Category.Slug">@Model.Category.Title</a>
                     </div>
                     <p class="card-text">@Model.Excerpt</p>
-                    <a asp-page="/Article" 
-                       asp-route-year="@Model.DatePublished.Value.Year"
-                       asp-route-month="@Model.DatePublished.Value.Month"
-                       asp-route-day="@Model.DatePublished.Value.Day"
-                       asp-route-slug="@Model.Slug"
-                       class="card-link">Read more</a>
+                    <permalink article="article" class="card-link">Read more</permalink>
                 </main>
             </article>
         }
@@ -37,15 +29,9 @@
         {
             <article class="card-body">
                 <header>
-                    <a asp-page="/Article" 
-                       asp-route-year="@Model.DatePublished.Value.Year"
-                       asp-route-month="@Model.DatePublished.Value.Month"
-                       asp-route-day="@Model.DatePublished.Value.Day"
-                       asp-route-slug="@Model.Slug"
-                       class="card-link"
-                    >
+                    <permalink article="article" class="card-link">
                         <h2 class="h2 card-title">@Model.Title</h2>
-                    </a>
+                    </permalink>
                 </header>
                 <main>
                     <p class="small text-muted mb-2">
@@ -53,12 +39,7 @@
                         Filed in <a asp-page="/Category" asp-route-slug="@Model.Category.Slug">@Model.Category.Title</a>
                     </p>
                     <p class="card-text">@Model.Excerpt</p>
-                    <a asp-page="/Article" 
-                       asp-route-year="@Model.DatePublished.Value.Year"
-                       asp-route-month="@Model.DatePublished.Value.Month"
-                       asp-route-day="@Model.DatePublished.Value.Day"
-                       asp-route-slug="@Model.Slug"
-                       class="card-link">Read more</a>
+                    <permalink article="article" class="card-link">Read more</permalink>
                 </main>
                 <footer>
                     
