@@ -10,7 +10,6 @@
     /// <summary>
     /// Use this tag helper to show/hide the is-valid class on a validated field.
     /// </summary>
-
     [HtmlTargetElement("input", Attributes = "validation-state-for")]
     public class ValidationStateTagHelper : TagHelper
     {
