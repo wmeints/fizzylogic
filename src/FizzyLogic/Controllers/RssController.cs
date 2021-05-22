@@ -40,7 +40,7 @@
             var contentItems = await _applicationDbContext.Articles
                 .Include(x => x.Category)
                 .Where(x => x.DatePublished != null)
-                .OrderBy(x => x.DatePublished)
+                .OrderByDescending(x => x.DatePublished)
                 .Take(50)
                 .ToListAsync();
 
