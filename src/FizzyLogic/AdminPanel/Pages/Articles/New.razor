@@ -67,10 +67,7 @@
 
     private async Task SaveChangesAsync(bool publish)
     {
-        var markdownPipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .UseFizzyLogicExtensions()
-            .Build();
+        
         
         void UpdateArticleProperties(ApplicationUser author, Category category, string featuredImageUrl)
         {
@@ -78,7 +75,7 @@
             Article.Author = author;
             Article.Category = category;
             Article.Markdown = Body;
-            Article.Html = Markdown.ToHtml(Body, markdownPipeline);
+            Article.Html = MarkdownConverter.ConvertToHtml(Body);
             Article.FeaturedImage = featuredImageUrl;
             Article.Excerpt = Excerpt;
             Article.DateCreated = DateTime.UtcNow;
@@ -111,7 +108,7 @@
 
             if (string.IsNullOrEmpty(Excerpt))
             {
-                var plainTextContent = Markdown.ToPlainText(Body, markdownPipeline);
+                var plainTextContent = MarkdownConverter.ConvertToText(Body);
                 Excerpt = plainTextContent.Substring(0, Math.Min(plainTextContent.Length, 250));
             }
 

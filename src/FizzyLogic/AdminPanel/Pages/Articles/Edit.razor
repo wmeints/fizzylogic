@@ -81,11 +81,6 @@
 
     private async Task SaveChangesAsync(bool publish)
     {
-        var markdownPipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .UseFizzyLogicExtensions()
-            .Build();
-
         var valid = await IsContentValidAsync();
 
         if (valid)
@@ -105,14 +100,14 @@
 
             if (string.IsNullOrEmpty(Excerpt))
             {
-                var plainTextContent = Markdown.ToPlainText(Body, markdownPipeline);
+                var plainTextContent = MarkdownConverter.ConvertToText(Body);
                 Excerpt = plainTextContent.Substring(0, Math.Min(plainTextContent.Length, 250));
             }
 
             article.Title = Title;
             article.Category = category;
             article.Markdown = Body;
-            article.Html = Markdown.ToHtml(Body, markdownPipeline);
+            article.Html = MarkdownConverter.ConvertToHtml(Body);
             article.Excerpt = Excerpt;
 
             // You can only publish once, and we don't want to break the URL.
