@@ -63,10 +63,16 @@
 
             IQueryable<Article> posts = _applicationDbContext.Articles.OrderBy(x => x.Title);
 
-            if (status == PublicationStatus.Draft)
-                posts = posts.Where(x => x.DatePublished == null);
-            else if (status == PublicationStatus.Published)
-                posts = posts.Where(x => x.DatePublished != null);
+#pragma warning disable IDE0072
+
+            posts = status switch
+            {
+                PublicationStatus.Draft => posts.Where(x => x.DatePublished == null),
+                PublicationStatus.Published => posts.Where(x => x.DatePublished != null),
+                _ => posts
+            };
+
+#pragma warning restore IDE0072
 
             var items = await posts.Skip(page * 20).Take(20).ToListAsync();
             var totalItemCount = await posts.CountAsync();
@@ -111,12 +117,7 @@
                 form.Slug = _slugifier.Process(form.Title);
             }
 
-            if (form.Id != null)
-            {
-                return await UpdateExistingArticle(form);
-            }
-
-            return await PublishNewArticle(form);
+            return form.Id != null ? await UpdateExistingArticle(form) : await PublishNewArticle(form);
         }
 
         private async Task<IActionResult> UpdateExistingArticle(PublishArticleForm form)
@@ -135,7 +136,7 @@
             article.DateModified = _clock.UtcNow;
             article.Slug = form.Slug;
 
-            await _applicationDbContext.SaveChangesAsync();
+            _ = await _applicationDbContext.SaveChangesAsync();
 
             return Ok(article);
         }
@@ -157,8 +158,8 @@
                 Slug = form.Slug
             };
 
-            await _applicationDbContext.Articles.AddAsync(article);
-            await _applicationDbContext.SaveChangesAsync();
+            _ = await _applicationDbContext.Articles.AddAsync(article);
+            _ = await _applicationDbContext.SaveChangesAsync();
 
             return Ok(article);
         }

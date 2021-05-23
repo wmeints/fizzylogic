@@ -10,7 +10,7 @@
     /// <summary>
     /// Generates a permalink to an article.
     /// </summary>
-    [HtmlTargetElement("permalink", Attributes="article")]
+    [HtmlTargetElement("permalink", Attributes = "article")]
     public class PermalinkTagHelper : TagHelper
     {
         /// <summary>
@@ -27,7 +27,7 @@
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             var childContent = await output.GetChildContentAsync();
-            
+
             var alternativeUrl =
                 $"/{Article.DatePublished.Value.Year:0000}/" +
                 $"{Article.DatePublished.Value.Month:00}/" +
@@ -36,8 +36,9 @@
 
             output.TagName = "a";
             output.Attributes.Add("href", alternativeUrl);
-            output.Content.SetHtmlContent(childContent);
             output.TagMode = TagMode.StartTagAndEndTag;
+
+            _ = output.Content.SetHtmlContent(childContent);
         }
     }
 }
