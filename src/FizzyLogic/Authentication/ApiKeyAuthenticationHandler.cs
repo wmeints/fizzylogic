@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Models;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
@@ -49,7 +50,7 @@
             {
                 // When you login using an API token we're identifying you as the super user in the database.
                 // Note that we have only one user in the database :-)
-                var user = await _applicationDbContext.Users.FirstOrDefaultAsync();
+                var user = await _applicationDbContext.Users.OrderBy(x=>x.UserName).FirstOrDefaultAsync();
                 var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
                 var ticket = new AuthenticationTicket(principal, Scheme.Name);
