@@ -7,13 +7,14 @@
     using System.Threading.Tasks;
     using FizzyLogic.Services;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Handles file uploads from the markdown editor in the admin panel.
     /// </summary>
-    [Authorize]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Identity.Application,ApiKey")]
     public class FileUploadsController : ControllerBase
     {
         private readonly List<string> _allowedFileTypes = new()

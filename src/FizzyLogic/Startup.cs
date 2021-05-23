@@ -1,5 +1,6 @@
 namespace FizzyLogic
 {
+    using Authentication;
     using System;
     using FizzyLogic.Data;
     using FizzyLogic.Models;
@@ -54,7 +55,21 @@ namespace FizzyLogic
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            _ = services.AddAuthentication();
+            // The application support two schemes for authenticating users.
+            // Users using the publication API can use an API token.
+            // Other users, coming through the admin section will use regular cookies.
+            _ = services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                })
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>("ApiKey", options =>
+                {
+                    options.ApiKey = _configuration["PublicationApi:Key"];
+                });
+            
             _ = services.AddAuthorization();
 
             _ = services.AddControllers();
