@@ -41,7 +41,7 @@ namespace FizzyLogic.Models
         public string Markdown { get; set; }
 
         /// <summary>
-        /// Gets or sets the mobiledoc source for the aritlce.
+        /// Gets or sets the mobiledoc source for the article.
         /// This is only used in migration scenarios.
         /// </summary>
         public string MobileDoc { get; set; }
