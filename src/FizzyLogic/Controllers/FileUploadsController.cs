@@ -68,8 +68,8 @@
                 }
 
                 using var imageStream = file.OpenReadStream();
-
                 var contentPath = await _imageService.UploadImage(file.FileName, imageStream);
+
                 return Ok(new { url = contentPath });
             }
 

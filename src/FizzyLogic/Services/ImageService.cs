@@ -3,6 +3,8 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
+    using SixLabors.ImageSharp;
+    using SixLabors.ImageSharp.Processing;
 
     /// <summary>
     /// Implementation of the image service.
@@ -36,23 +38,59 @@
                 today.Month.ToString("00"),
                 today.Day.ToString("00"));
 
+            await SaveImage(filename, imageStream, outputFolder);
+            await CreateResponsiveImages(filename, outputFolder);
+
+            return $"/content/images/{today.Year:0000}/{today.Month:00}/{today.Day:00}/{filename}";
+        }
+
+        private static async Task SaveImage(string filename, Stream imageStream, string outputFolder)
+        {
             if (!Directory.Exists(outputFolder))
             {
                 _ = Directory.CreateDirectory(outputFolder);
             }
 
+            var outputFileName = Path.Join(outputFolder, filename);
             var bytesRead = 0;
             var buffer = new byte[4096];
 
-            using (var outputStream = File.OpenWrite(Path.Join(outputFolder, filename)))
+            using (var outputStream = File.OpenWrite(outputFileName))
             {
                 while ((bytesRead = await imageStream.ReadAsync(buffer, 0, 4096)) > 0)
                 {
                     await outputStream.WriteAsync(buffer, 0, bytesRead);
                 }
             }
+        }
 
-            return $"/content/images/{today.Year:0000}/{today.Month:00}/{today.Day:00}/{filename}";
+        private async Task CreateResponsiveImages(string filename, string outputFolder)
+        {
+            var outputFileName = Path.Join(outputFolder, filename);
+            var targetSizes = new[] { 966, 514 };
+
+            foreach (var targetSize in targetSizes)
+            {
+                await ResizeImage(outputFileName, Path.Join(outputFolder,
+                    GenerateFileName(filename, targetSize)), targetSize);
+            }
+        }
+
+        private async Task ResizeImage(string originalFile, string outputFile, int targetWidth)
+        {
+            var image = Image.Load(originalFile);
+            var targetHeight = (targetWidth / image.Width) * image.Height;
+
+            image.Mutate(x => x.Resize(targetWidth, targetHeight));
+            await image.SaveAsync(outputFile);
+        }
+
+        private string GenerateFileName(string filename, int targetWidth)
+        {
+            var nameWithoutExtension = Path.GetFileNameWithoutExtension(filename);
+            var extension = Path.GetExtension(filename);
+
+            return $"{nameWithoutExtension}-w{targetWidth}{extension}";
         }
     }
 }
