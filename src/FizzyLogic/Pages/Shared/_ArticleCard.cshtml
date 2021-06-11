@@ -3,27 +3,20 @@
     var article = Model;
 }
 @functions{
-    string ImageSizeSet(string imageSource)
+    string TileImage(string source)
     {
-        var targetSizes = new[] {
-            966, 514
-        };
+        var name = System.IO.Path.GetFileNameWithoutExtension(source);
+        var extension = System.IO.Path.GetExtension(source);
+        var path = source[..source.LastIndexOf("/")];
 
-        var images = targetSizes.Select(x => {
-            var name = System.IO.Path.GetFileNameWithoutExtension(imageSource);
-            var extension = System.IO.Path.GetExtension(imageSource);
-
-            return $"url('{name}-w{x}{extension}')"; 
-        }).Concat(new [] { imageSource});
-
-        return $"image-set({string.Join(' ', images)});";
+        return $"{path}/{name}-w966{extension}";
     }
 }
 <div class="col article-card-container">
     <div class="card article-card h-100 border-light shadow-sm">
         @if(!string.IsNullOrEmpty(Model.FeaturedImage))
         {
-            <div src="@Model.FeaturedImage" alt="" class="card-img-top" style="height: 250px; background-image: @ImageSizeSet(Model.FeaturedImage); background-size: cover; background-position: center">
+            <div class="card-img-top" style="height: 250px; background-image: @TileImage(Model.FeaturedImage); background-size: cover; background-position: center">
 
             </div>
             <article class="card-body">

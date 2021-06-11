@@ -69,7 +69,7 @@ namespace FizzyLogic
                 {
                     options.ApiKey = _configuration["PublicationApi:Key"];
                 });
-            
+
             _ = services.AddAuthorization();
 
             _ = services.AddControllers();
